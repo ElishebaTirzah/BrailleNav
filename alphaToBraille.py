@@ -116,15 +116,26 @@ def word_to_braille(word):
         result = ""
         for char in word:
             result += char_to_braille(char)
-            num = ord(letters[char])
-            num = num - 10240
-            a = f"{num:06b}"
-            for i in range(len(a)):
-                print(a[i])
-                if a[i] == "1":
-                    print("HIGH")
-                else:
-                    print("LOW")
+            if char in letters:  
+                num = ord(letters[char]) - 10240
+            elif char in numbers:  
+                num = ord(numbers[char]) - 10240
+            elif char in punctuation:  
+                num = ord(punctuation[char]) - 10240
+            elif char in contractions:  
+                num = ord(contractions[char]) - 10240
+            else:
+                num = -1
+
+            if num != -1:
+                a = f"{num:06b}"
+                print(a)
+                for i in range(len(a)):
+                    print(a[i])
+                    if a[i] == "1":
+                        print("HIGH")
+                    else:
+                        print("LOW")
         return result
 
 def build_braille_word(trimmed_word, shavings, index, braille):
