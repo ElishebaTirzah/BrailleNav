@@ -1,5 +1,6 @@
 # Translate alphabet based text to braille.
 import mapAlphaToBraille, mapBrailleToAlpha
+import time
 from mapAlphaToBraille import letters, contractions, punctuation, numbers
 CAPITAL = chr(10272)  # ⠠
 NUMBER = chr(10300)  # ⠼
@@ -47,6 +48,7 @@ def trim(word):
 def numbers_handler(word):
     # Replace each group of numbers in a word to their respective braille representation.
     if word == "":
+        #print(word)
         return word
     result = word[0]
     if word[0].isdigit():
@@ -54,10 +56,43 @@ def numbers_handler(word):
     for i in range(1, len(word)):
         if word[i].isdigit() and word[i-1].isdigit():
             result += mapAlphaToBraille.numbers.get(word[i])
+            num = mapAlphaToBraille.numbers.get(word[i])
+            a = ord(num)
+            print(ord(num))
+            c = a-10240
+            print (f"Binary num conversion: {c:06b}")
+            binary_num = f"{c:06b}"
+            for i in range (len(binary_num)):
+                if binary_num[i] == "1":
+                    print(f"HIGH: {binary_num[i]}")
+                else:
+                    print(f"LOW: {binary_num[i]}")
+
+            #print(result)
         elif word[i].isdigit():
             result += NUMBER + mapAlphaToBraille.numbers.get(word[i])
+            num = mapAlphaToBraille.numbers.get(word[i])
+            a = ord(num)
+            print(ord(num))
+            c = a-10240
+            print (f"Binary num conversion: {c:06b}")
+            binary_num = f"{c:06b}"
+            for i in range (len(binary_num)):
+                if binary_num[i] == "1":
+                    print(f"HIGH: {binary_num[i]}")
+                else:
+                    print(f"LOW: {binary_num[i]}")
+            #print(result)
         else:
             result += word[i]
+            #num = mapAlphaToBraille.numbers.get(word[i])
+            #a = ord(num)
+            #print(ord(num))
+            #c = a-10240
+            #print (f"Binary num conversion: {c:06b}")
+            #print(result)
+
+      
     return result
 
 
@@ -110,6 +145,7 @@ def char_to_braille(char):
 
 def word_to_braille(word):
     # Convert an alphabetic word to braille.
+    is_contraction = word in mapAlphaToBraille.contractions
     if word in mapAlphaToBraille.contractions:
         return mapAlphaToBraille.contractions.get(word)
     else:
@@ -131,11 +167,12 @@ def word_to_braille(word):
                 a = f"{num:06b}"
                 print(a)
                 for i in range(len(a)):
-                    print(a[i])
+                    #print(a[i])
                     if a[i] == "1":
-                        print("HIGH")
+                        print(f"HIGH: {a[i]}",end="\r")
                     else:
-                        print("LOW")
+                        print(f"LOW: {a[i]}",end="\r")
+            time.sleep(0.5 if is_contraction else 1)
         return result
 
 def build_braille_word(trimmed_word, shavings, index, braille):
