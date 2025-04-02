@@ -147,15 +147,11 @@ def word_to_braille(word):
             if num != -1:
                 a = f"{num:06b}"
                 print(a)
+                states = [a[i]=="1" for i in range (len(gpio_array))]
+                GPIO.output(gpio_array, states)
                 for i in range(len(gpio_array)):
-                    print(a[i])
-                    if a[i] == "1":
-                        GPIO.output(gpio_array[i], True)
-                        print(f"GPIO pin {gpio_array[i]} is high")
-                    else:
-                        GPIO.output(gpio_array[i], False)
-                        print(f"GPIO pin {gpio_array[i]} is low")
-                    time.sleep(1)
+                    print(f"GPIO pin {gpio_array[i]} is {'high' if states[i] else 'low'}")
+                time.sleep(1)
         return result
 
 def build_braille_word(trimmed_word, shavings, index, braille):
